@@ -30,9 +30,10 @@ class ViewController: UIViewController {
         setupBottomImageView(image)
     }
     
-    deinit {
-        removeNotificationObserver()
-    }
+    // From iOS 9, notification observers are automatically removed.
+//    deinit {
+//        removeNotificationObserver()
+//    }
     
     // MARK: Action
     @IBAction func tappedButton(sender: UIButton) {
