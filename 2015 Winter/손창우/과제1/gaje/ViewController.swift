@@ -14,17 +14,28 @@ class ViewController: UIViewController, UIAlertViewDelegate {
     @IBOutlet weak var button2: UIButton!
     @IBOutlet weak var button1: UIButton!
     
+    // MARK: View
     override func viewDidLoad() {
         super.viewDidLoad()
         setupImage()
     }
     
+    // MARK: Action
+    @IBAction func tappedButton1(sender: UIButton) {
+        showAlertController()
+    }
+    
+    @IBAction func tappedButton2(sender: UIButton) {
+        showAlertView()
+    }
+    
+    // MARK: Alert
     func showAlertView() {
         let alertView = UIAlertView(title: "AlertView", message: "kkk", delegate: self, cancelButtonTitle: "changeImage", otherButtonTitles: "hideImage")
         alertView.show()
     }
     
-    func alertView(alertView: UIAlertView!, clickedButtonAtIndex buttonIndex: Int){
+    func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int){
         switch buttonIndex {
         case 0:
             if self.imageView.image == UIImage(named: "bag") {
@@ -33,21 +44,12 @@ class ViewController: UIViewController, UIAlertViewDelegate {
             else {
                 self.imageView.image = UIImage(named: "bag")
             }
-            break;
         case 1:
-            if self.imageView.hidden == true {
-                        self.imageView.hidden=false
-            
-            }
-            else {
-                self.imageView.hidden = true
-            }
-            break;
+            self.imageView.hidden = !self.imageView.hidden
         default:
-            break;
+            break
         }
     }
-    
     
     private func showAlertController() {
         let alertController = UIAlertController(title: "AlertController", message: "kkk", preferredStyle: .ActionSheet)
@@ -80,16 +82,5 @@ class ViewController: UIViewController, UIAlertViewDelegate {
         let image = UIImage(named: "bag")
         imageView.image = image
     }
-    
-    
-    @IBAction func tappedButton1(sender: UIButton) {
-        showAlertController()
-    }
-    
-    
-    @IBAction func tappedButton2(sender: UIButton) {
-        showAlertView()
-    }
-
 }
 
