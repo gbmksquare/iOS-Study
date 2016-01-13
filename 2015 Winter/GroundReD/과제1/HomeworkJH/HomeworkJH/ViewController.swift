@@ -10,9 +10,15 @@ import UIKit
 
 class ViewController: UIViewController, UIAlertViewDelegate{
 
-    @IBOutlet var myImage: UIImageView!
+    @IBOutlet weak var myImage: UIImageView!
     
+    // MARK: View
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        myImage.image = UIImage(named: "day")
+    }
     
+    // MARK: Action
 //    button1 
 //    using UIAlertController
 //    function : change image and hide image
@@ -31,19 +37,12 @@ class ViewController: UIViewController, UIAlertViewDelegate{
         let alertController = UIAlertController(title: "Image", message: nil, preferredStyle: .Alert)
 
 //         make function : change image and hide image
-        let changeImage = UIAlertAction(title: "change", style: .Default, handler: {
-            (alert: UIAlertAction!) in
+        let changeImage = UIAlertAction(title: "change", style: .Default, handler: { [unowned self] (alert: UIAlertAction!) in
             self.changeImage()
         })
-        let hideImage = UIAlertAction(title: "hide", style: .Default, handler: {
-            (alert: UIAlertAction!) in
-            
-            if (self.myImage.hidden == false) {
-             self.myImage.hidden = true
-            }
-            else if (self.myImage.hidden == true){
-                self.myImage.hidden = false
-            }
+        
+        let hideImage = UIAlertAction(title: "hide", style: .Default, handler: { [unowned self] (alert: UIAlertAction!) in
+            self.myImage.hidden = !self.myImage.hidden
         })
 
 //        add action in alertController
@@ -63,8 +62,7 @@ class ViewController: UIViewController, UIAlertViewDelegate{
         case 0:
             self.changeImage()
         case 1:
-            if ( myImage.hidden == true) { myImage.hidden = false }
-            else{ myImage.hidden = true}
+            myImage.hidden = !myImage.hidden
         default:
             break
         }
@@ -72,10 +70,8 @@ class ViewController: UIViewController, UIAlertViewDelegate{
 
     
     func changeImage(){
-//        makea image array and change images
-        var changedImages: [UIImage] = []
-        changedImages.append(UIImage(named: "day")!)
-        changedImages.append(UIImage(named: "night")!)
+//        make image array and change images
+        var changedImages = [UIImage(named: "day")!, UIImage(named: "night")!]
         
         if(myImage.image == changedImages[0]){
             myImage.image = changedImages[1]
@@ -84,16 +80,5 @@ class ViewController: UIViewController, UIAlertViewDelegate{
             myImage.image = changedImages[0]
         }
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        myImage.image = UIImage(named: "day")
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-      
-    }
-    
 }
 
