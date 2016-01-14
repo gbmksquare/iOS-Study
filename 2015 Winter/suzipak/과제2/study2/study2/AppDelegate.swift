@@ -1,8 +1,8 @@
 //
 //  AppDelegate.swift
-//  study1
+//  study2
 //
-//  Created by Pak Suzi on 2016. 1. 2..
+//  Created by Pak Suzi on 2016. 1. 14..
 //  Copyright © 2016년 suzipak. All rights reserved.
 //
 
