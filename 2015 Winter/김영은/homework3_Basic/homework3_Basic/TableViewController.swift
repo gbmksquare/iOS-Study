@@ -12,7 +12,21 @@ import Alamofire
 
 class TableViewController: UITableViewController {
 
-   
+    struct Photo {
+        var id : Int
+        var title : String
+        var thumbnailUrl : String
+        var url : String
+        
+        init(id : Int, title: String, thumbnailUrl: String, url: String) {
+            self.id = id
+            self.title = title
+            self.thumbnailUrl = thumbnailUrl
+            self.url = url
+        }
+    }
+    var myPhoto = [Photo]()
+    var jsonArray:NSMutableArray?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,12 +34,27 @@ class TableViewController: UITableViewController {
         title = "하이류"  // 네비게이션 에서 타이틀
         
         
-        requestAndResponseHandling()
         setUpTableView()
+        requestAndResponseHandling()
+        
+        /*
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) { () -> Void in
+            //Do something intensive
+            
+            let mainQueue = dispatch_get_main_queue()
+            dispatch_async(mainQueue,{ () -> Void in
+                //Update UI
+                
+            })
+        }
+        */
+       // requestAndResponseHandling()
+       
     }
     
    
-    func requestAndResponseHandling() {
+    func  requestAndResponseHandling()/*(cellNum : Int) -> Photo */{
+        //var tmpPhoto : Photo = Photo.init(id: 0 ,title: "",thumbnailUrl: "",url: "")
         let postEndpoint: String = "http://jsonplaceholder.typicode.com/photos/1"
         Alamofire.request(.GET, postEndpoint)
             .responseJSON { response in
@@ -41,6 +70,10 @@ class TableViewController: UITableViewController {
                     let post = JSON(value)
                     // now we have the results, let's just print them though a tableview would definitely be better UI:
                     print("The post is: " + post.description)
+                    
+                    //tmpPhoto = Photo(id : post["id"].int!, title: post["title"].string!, thumbnailUrl: post["thumbnailUrl"].string!, url: post["url"].string!)
+                    
+                    
                     if let title = post["title"].string {
                         // to access a field:
                         print("The title is: " + title)
@@ -49,6 +82,7 @@ class TableViewController: UITableViewController {
                     }
                 }
         }
+    //    return tmpPhoto
     }
     
     func setUpTableView(){
@@ -78,7 +112,8 @@ class TableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("myCell")! as UITableViewCell
-        cell.textLabel?.text = "cell \(indexPath.row+1)"
+        
+        //cell.textLabel?.text = "cell \(indexPath.row+1)"
         return cell
     }
     
