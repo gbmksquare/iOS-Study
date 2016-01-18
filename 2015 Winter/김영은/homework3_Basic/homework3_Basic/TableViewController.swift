@@ -18,10 +18,15 @@ class TableViewController: UITableViewController {
         title = "하이류"  // 네비게이션 에서 타이틀
         
         setUpTableView()
+        
+        
+        
     }
     
-    func setUpTableView()
-    {
+   
+    
+    
+    func setUpTableView(){
         tableView.dataSource = self
         tableView.delegate = self // 액션 일어났을때
     }
