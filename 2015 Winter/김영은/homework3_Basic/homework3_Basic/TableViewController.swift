@@ -18,15 +18,12 @@ class TableViewController: UITableViewController {
         var thumbnailUrl : String
         var url : String
         
-        init(id : Int, title: String, thumbnailUrl: String, url: String) {
-            self.id = id
-            self.title = title
-            self.thumbnailUrl = thumbnailUrl
-            self.url = url
-        }
     }
     var myPhoto = [Photo]()
-    var jsonArray:NSMutableArray?
+    
+    
+    let networkActivityManager = NetworkActivityManager()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,8 +32,10 @@ class TableViewController: UITableViewController {
         
         
         setUpTableView()
-        requestAndResponseHandling()
+        loadinitialPhotos()
         
+       // self.refreshControl?.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
+    
         /*
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) { () -> Void in
             //Do something intensive
@@ -51,38 +50,52 @@ class TableViewController: UITableViewController {
        // requestAndResponseHandling()
        
     }
-    
+    func handleRefresh(refreshControl: UIRefreshControl) {
+        
+        self.tableView.reloadData()
+        refreshControl.endRefreshing()
+    }
    
-    func  requestAndResponseHandling()/*(cellNum : Int) -> Photo */{
-        //var tmpPhoto : Photo = Photo.init(id: 0 ,title: "",thumbnailUrl: "",url: "")
-        let postEndpoint: String = "http://jsonplaceholder.typicode.com/photos/1"
+    func  requestAndResponseHandling(cellNum : Int){
+        let postEndpoint: String = "http://jsonplaceholder.typicode.com/photos/\(cellNum)"
+        
+        //Count
+        self.networkActivityManager.increaseNetworkCount()
+        
+        
         Alamofire.request(.GET, postEndpoint)
             .responseJSON { response in
                 guard response.result.error == nil else {
                     // got an error in getting the data, need to handle it
-                    print("error calling GET on /photos/1")
+                    print("error calling GET on /photos/\(cellNum)")
                     print(response.result.error!)
+                    self.networkActivityManager.decreaseNetworkCount()
                     return
                 }
                 
                 if let value: AnyObject = response.result.value {
-                    // handle the results as JSON, without a bunch of nested if loops
+                    
+                    
+                    
+                    
                     let post = JSON(value)
                     // now we have the results, let's just print them though a tableview would definitely be better UI:
                     print("The post is: " + post.description)
                     
-                    //tmpPhoto = Photo(id : post["id"].int!, title: post["title"].string!, thumbnailUrl: post["thumbnailUrl"].string!, url: post["url"].string!)
+                    let tmpPhoto = Photo(
+                        id : post["id"].int!,
+                        title: post["title"].string!,
+                        thumbnailUrl: post["thumbnailUrl"].string!,
+                        url: post["url"].string!)
                     
-                    
-                    if let title = post["title"].string {
-                        // to access a field:
-                        print("The title is: " + title)
-                    } else {
-                        print("error parsing /photos/1")
+                    self.myPhoto.append(tmpPhoto)
+                    if self.myPhoto.count > 0 {
+                        self.tableView.reloadData()
                     }
+                    self.networkActivityManager.decreaseNetworkCount()
+                    
                 }
         }
-    //    return tmpPhoto
     }
     
     func setUpTableView(){
@@ -103,7 +116,7 @@ class TableViewController: UITableViewController {
         
         switch section {
         case 0 :
-            return 10
+            return myPhoto.count
             
         default :
             return 0
@@ -113,9 +126,50 @@ class TableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("myCell")! as UITableViewCell
         
-        //cell.textLabel?.text = "cell \(indexPath.row+1)"
+        cell.textLabel?.text = myPhoto[indexPath.row].title
         return cell
     }
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
+        let contentOffset = scrollView.contentOffset.y
+        let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height;
+        if networkActivityManager.networkCount == 0 && (maximumOffset - contentOffset < -60 ){
+            print("loadMorePhotos() called")
+            loadMorePhotos()
+        }
+        
+        /*
+        if !isLoadingMore && (maximumOffset - contentOffset <= threshold) {
+            // Get more data - API call
+            self.isLoadingMore = true
+        
+            // Update UI
+            dispatch_async(dispatch_get_main_queue()) {
+                tableView.reloadData()
+                self.isLoadingMore = false
+            }
+        }
+*/
+    }
+    
+    func loadinitialPhotos(){
+        
+        let start = 1
+        let end = 11
+        for i in start..<end {
+            requestAndResponseHandling(i)
+        }
+    }
+    
+    
+    func loadMorePhotos(){
+        
+        let start = myPhoto.count + 1
+        let end = myPhoto.count + 6
+        for i in start..<end {
+            requestAndResponseHandling(i)
+        }
+    }
+    
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
@@ -137,4 +191,30 @@ class TableViewController: UITableViewController {
         
     }
 
+}
+class NetworkActivityManager {
+    var networkCount: Int = 0 {
+        willSet(newValue) {
+            if newValue > 0 {
+                UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+            } else {
+                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+                
+            }
+        }
+        didSet {
+            
+        }
+    }
+    
+    func increaseNetworkCount() {
+        
+        networkCount++
+        print(networkCount)
+    }
+    
+    func decreaseNetworkCount(){
+        networkCount--
+        print(networkCount)
+    }
 }
