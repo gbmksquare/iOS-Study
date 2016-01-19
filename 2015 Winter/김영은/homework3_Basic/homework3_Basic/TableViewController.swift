@@ -12,6 +12,7 @@ import Alamofire
 
 class TableViewController: UITableViewController {
 
+    
     struct Photo {
         var id : Int
         var title : String
@@ -28,32 +29,12 @@ class TableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "하이류"  // 네비게이션 에서 타이틀
+        title = "이거슨 제목"  // 네비게이션 에서 타이틀
         
         
         setUpTableView()
         loadinitialPhotos()
-        
-       // self.refreshControl?.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
-    
-        /*
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) { () -> Void in
-            //Do something intensive
-            
-            let mainQueue = dispatch_get_main_queue()
-            dispatch_async(mainQueue,{ () -> Void in
-                //Update UI
-                
-            })
-        }
-        */
-       // requestAndResponseHandling()
        
-    }
-    func handleRefresh(refreshControl: UIRefreshControl) {
-        
-        self.tableView.reloadData()
-        refreshControl.endRefreshing()
     }
    
     func  requestAndResponseHandling(cellNum : Int){
@@ -79,8 +60,8 @@ class TableViewController: UITableViewController {
                     
                     
                     let post = JSON(value)
-                    // now we have the results, let's just print them though a tableview would definitely be better UI:
-                    print("The post is: " + post.description)
+                    
+                    //print("The post is: " + post.description)
                     
                     let tmpPhoto = Photo(
                         id : post["id"].int!,
@@ -104,7 +85,7 @@ class TableViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "section \(section+1)"
+        return "이거슨 섹션 \(section+1)"
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -124,45 +105,59 @@ class TableViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("myCell")! as UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("myCell")! as! TableViewCell
+            
+        let checkedUrlString = myPhoto[indexPath.row].thumbnailUrl.stringByReplacingOccurrencesOfString("http://", withString: "https://")
+        //print(checkedUrlString)
+        if let checkedUrl = NSURL(string: checkedUrlString ){
+            cell.thumbnailImageView.contentMode = .ScaleAspectFit
+            getDataFromUrl(checkedUrl) { (data, response, error)  in
+                dispatch_async(dispatch_get_main_queue()) { () -> Void in
+                    guard let data = data where error == nil else { return }
+                    //print("Download Finished")
+                    cell.thumbnailImageView.image =  UIImage(data: data)
+                }
+            }
+        }
         
-        cell.textLabel?.text = myPhoto[indexPath.row].title
+        if cell.id != 0 && cell.id != myPhoto[indexPath.row].id {
+            cell.thumbnailImageView.image = nil
+        }
+        cell.id = myPhoto[indexPath.row].id
+        cell.titleLabel.text = myPhoto[indexPath.row].title
         return cell
     }
+    
+    func getDataFromUrl(url:NSURL, completion: ((data: NSData?, response: NSURLResponse?, error: NSError? ) -> Void)) {
+        NSURLSession.sharedSession().dataTaskWithURL(url) { (data, response, error) in
+            completion(data: data, response: response, error: error)
+            }.resume()
+    }
+    
+    
+    
+    
     override func scrollViewDidScroll(scrollView: UIScrollView) {
         let contentOffset = scrollView.contentOffset.y
         let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height;
         if networkActivityManager.networkCount == 0 && (maximumOffset - contentOffset < -60 ){
-            print("loadMorePhotos() called")
+            //print("loadMorePhotos() called")
             loadMorePhotos()
         }
-        
-        /*
-        if !isLoadingMore && (maximumOffset - contentOffset <= threshold) {
-            // Get more data - API call
-            self.isLoadingMore = true
-        
-            // Update UI
-            dispatch_async(dispatch_get_main_queue()) {
-                tableView.reloadData()
-                self.isLoadingMore = false
-            }
-        }
-*/
     }
     
+    
+    
     func loadinitialPhotos(){
-        
+        print("initially getting photos")
         let start = 1
         let end = 11
         for i in start..<end {
             requestAndResponseHandling(i)
         }
     }
-    
-    
     func loadMorePhotos(){
-        
+        print("loading more photos")
         let start = myPhoto.count + 1
         let end = myPhoto.count + 6
         for i in start..<end {
@@ -180,10 +175,10 @@ class TableViewController: UITableViewController {
         }
         switch identifier {
         case "mySegue" :
-            print("hi")
-          //  let detailViewController = segue.destinationViewController as! DetailViewController
+           // print("hi")
+            let detailViewController = segue.destinationViewController as! DetailViewController
             
-          //  detailViewController.tmp = "\(tableView.indexPathForSelectedRow!.row)"
+            detailViewController.urlString = myPhoto[tableView.indexPathForSelectedRow!.row].url
             
         default: return
         }
@@ -191,6 +186,8 @@ class TableViewController: UITableViewController {
         
     }
 
+    
+    
 }
 class NetworkActivityManager {
     var networkCount: Int = 0 {
@@ -210,11 +207,11 @@ class NetworkActivityManager {
     func increaseNetworkCount() {
         
         networkCount++
-        print(networkCount)
+     //   print(networkCount)
     }
     
     func decreaseNetworkCount(){
         networkCount--
-        print(networkCount)
+    //    print(networkCount)
     }
 }
