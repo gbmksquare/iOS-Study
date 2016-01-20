@@ -18,12 +18,16 @@ class ImageViewController: UIViewController {
         super.viewDidLoad()
         
         let replaceString = url!.stringByReplacingOccurrencesOfString("http://", withString: "https://")
+        
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+        
         if let url = NSURL(string: replaceString) {
             if let data = NSData(contentsOfURL: url) {
                 self.imageView.image = UIImage(data: data)
                 UIApplication.sharedApplication().networkActivityIndicatorVisible = false
             }
         }
+        })
         
 //        if let checkedURL = NSURL(string: url!) {
 //            downloadImage(checkedURL)

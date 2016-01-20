@@ -19,8 +19,12 @@ class MainTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setData()
-        get()
-        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
+            // Do Something intensive
+            
+            // Network
+            self.get()
+        }
         title = "gaje3"
     }
     
@@ -41,8 +45,10 @@ class MainTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            
         
-        let data = datas[indexPath.row]
+        let data = self.datas[indexPath.row]
         cell.textLabel?.text = "\(data["id"])"
         
         let replaceString = data["thumbnailUrl"].string?.stringByReplacingOccurrencesOfString("http://", withString: "https://")
@@ -52,7 +58,7 @@ class MainTableViewController: UITableViewController {
                 cell.imageView?.image = UIImage(data: data)
             }
         }
-        
+            })
         return cell
     }
     
