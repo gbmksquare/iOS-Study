@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A1C9C661C54D46900F80F18 /* MainTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A350F601C4F1D9000DD58B5 /* MainTableViewController.swift */; };
+		0A1C9C671C54D46D00F80F18 /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA72B511C4F4CE600CEF0D5 /* ImageViewController.swift */; };
 		0A350F331C4F1D5F00DD58B5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A350F321C4F1D5F00DD58B5 /* AppDelegate.swift */; };
 		0A350F381C4F1D5F00DD58B5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A350F361C4F1D5F00DD58B5 /* Main.storyboard */; };
 		0A350F3A1C4F1D5F00DD58B5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A350F391C4F1D5F00DD58B5 /* Assets.xcassets */; };
@@ -344,6 +346,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A1C9C661C54D46900F80F18 /* MainTableViewController.swift in Sources */,
+				0A1C9C671C54D46D00F80F18 /* ImageViewController.swift in Sources */,
 				0A350F481C4F1D5F00DD58B5 /* gaje3Tests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

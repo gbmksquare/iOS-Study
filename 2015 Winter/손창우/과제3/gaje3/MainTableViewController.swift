@@ -20,8 +20,6 @@ class MainTableViewController: UITableViewController {
         super.viewDidLoad()
         setData()
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
-            // Do Something intensive
-            
             // Network
             self.get()
         }
@@ -45,8 +43,6 @@ class MainTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            
         
         let data = self.datas[indexPath.row]
         cell.textLabel?.text = "\(data["id"])"
@@ -58,7 +54,7 @@ class MainTableViewController: UITableViewController {
                 cell.imageView?.image = UIImage(data: data)
             }
         }
-            })
+        
         return cell
     }
     

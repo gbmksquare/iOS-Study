@@ -1,14 +1,14 @@
 //
-//  gaje3UITests.swift
-//  gaje3UITests
+//  gaje4UITests.swift
+//  gaje4UITests
 //
-//  Created by SonChang Woo on 2016. 1. 20..
+//  Created by SonChang Woo on 2016. 1. 24..
 //  Copyright © 2016년 SonChangWoo. All rights reserved.
 //
 
 import XCTest
 
-class gaje3UITests: XCTestCase {
+class gaje4UITests: XCTestCase {
         
     override func setUp() {
         super.setUp()
@@ -29,7 +29,6 @@ class gaje3UITests: XCTestCase {
     }
     
     func testExample() {
-        
         // Use recording to get started writing UI tests.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
     }

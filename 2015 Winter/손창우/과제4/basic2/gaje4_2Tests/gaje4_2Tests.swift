@@ -1,15 +1,15 @@
 //
-//  gaje3Tests.swift
-//  gaje3Tests
+//  gaje4_2Tests.swift
+//  gaje4_2Tests
 //
-//  Created by SonChang Woo on 2016. 1. 20..
+//  Created by SonChang Woo on 2016. 1. 24..
 //  Copyright © 2016년 SonChangWoo. All rights reserved.
 //
 
 import XCTest
-@testable import gaje3
+@testable import gaje4_2
 
-class gaje3Tests: XCTestCase {
+class gaje4_2Tests: XCTestCase {
     
     override func setUp() {
         super.setUp()
@@ -22,9 +22,6 @@ class gaje3Tests: XCTestCase {
     }
     
     func testExample() {
-        
-        let main = MainTableViewController()
-        
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
