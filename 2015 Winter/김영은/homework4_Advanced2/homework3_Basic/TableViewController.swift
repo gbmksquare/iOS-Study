@@ -9,6 +9,7 @@
 import UIKit
 import SwiftyJSON
 import Alamofire
+import SDWebImage
 
 class TableViewController: UITableViewController {
 
@@ -21,12 +22,12 @@ class TableViewController: UITableViewController {
         
     }
     var myPhoto = [Photo]()
-    
+     var myCache = SDImageCache (namespace: "MyUniqueCacheKey")
     
     let networkActivityManager = NetworkActivityManager()
     
     
-    override func viewDidLoad() {
+    override  func viewDidLoad() {
         super.viewDidLoad()
         
         title = "이거슨 제목"  // 네비게이션 에서 타이틀
@@ -106,24 +107,39 @@ class TableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("myCell")! as! TableViewCell
-    //    cell.thumnailUrl = myPhoto[indexPath.row].thumbnailUrl
+        cell.thumbnailUrl = myPhoto[indexPath.row].thumbnailUrl
      //   cell.identifier = cell.thumnailUrl;
-        
-        
-        let checkedUrlString = myPhoto[indexPath.row].thumbnailUrl.stringByReplacingOccurrencesOfString("http://", withString: "https://")
-        //print(checkedUrlString)
-        if let checkedUrl = NSURL(string: checkedUrlString ){
-            cell.thumbnailImageView.contentMode = .ScaleAspectFit
-            getDataFromUrl(checkedUrl) { (data, response, error)  in
-                dispatch_async(dispatch_get_main_queue()) { () -> Void in
-                    guard let data = data where error == nil else { return }
-                    //print("Download Finished")
-                    cell.thumbnailImageView.image =  UIImage(data: data)
-                }
+   
+        myCache.queryDiskCacheForKey(myPhoto[indexPath.row].thumbnailUrl) { (image, SDImageCacheType) -> Void in
+            
+            //print("mycache")
+            if image != nil {
+                print("already there")
+                cell.thumbnailImageView.image = image
+
+
             }
+            else {
+                print("downloading")
+                let checkedUrlString = self.myPhoto[indexPath.row].thumbnailUrl.stringByReplacingOccurrencesOfString("http://", withString: "https://")
+                //print(checkedUrlString)
+                if let checkedUrl = NSURL(string: checkedUrlString ){
+                    cell.thumbnailImageView.contentMode = .ScaleAspectFit
+                    self.getDataFromUrl(checkedUrl) { (data, response, error)  in
+                        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+                            guard let data = data where error == nil else { return }
+                            //print("Download Finished")
+                            cell.thumbnailImageView.image =  UIImage(data: data)
+                            self.myCache.storeImage(UIImage(data: data), forKey: self.myPhoto[indexPath.row].thumbnailUrl)
+                        }
+                    }
+                }
+
+                
+                
+            }
+
         }
-        
-        
         
         
         

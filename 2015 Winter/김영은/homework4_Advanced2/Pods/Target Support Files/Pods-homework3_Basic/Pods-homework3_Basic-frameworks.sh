@@ -85,9 +85,11 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-homework3_Basic/Alamofire.framework"
+  install_framework "Pods-homework3_Basic/SDWebImage.framework"
   install_framework "Pods-homework3_Basic/SwiftyJSON.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-homework3_Basic/Alamofire.framework"
+  install_framework "Pods-homework3_Basic/SDWebImage.framework"
   install_framework "Pods-homework3_Basic/SwiftyJSON.framework"
 fi

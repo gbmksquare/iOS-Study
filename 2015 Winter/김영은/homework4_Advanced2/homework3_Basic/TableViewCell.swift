@@ -14,25 +14,24 @@ class TableViewCell: UITableViewCell {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var thumbnailImageView: UIImageView!
-    var thumnailUrl : String!
+    var thumbnailUrl : String!
     var identifier : String!
     var id : Int = 0
     
     var downloadedImage: UIImage!
 
+
     override func awakeFromNib() {
         super.awakeFromNib()
-        thumbnailImageView.contentMode = .ScaleAspectFit
     }
+    
     
     override func prepareForReuse() {
         super.prepareForReuse()
-    }
-
-    /*
+    }    /*
     
     func populateCell(url: String){
-        
+    
         let checkedUrlString = url.stringByReplacingOccurrencesOfString("http://", withString: "https://")
             
         if let checkedUrl = NSURL(string: checkedUrlString ){
