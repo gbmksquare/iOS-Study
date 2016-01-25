@@ -10,9 +10,6 @@ import UIKit
 
 class TableViewCell: UITableViewCell {
 
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var thumbnailImageView: UIImageView!
-    var id : Int = 0
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
