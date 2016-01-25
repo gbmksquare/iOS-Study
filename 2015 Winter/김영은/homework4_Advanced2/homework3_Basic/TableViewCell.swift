@@ -16,6 +16,7 @@ class TableViewCell: UITableViewCell {
     @IBOutlet weak var thumbnailImageView: UIImageView!
     var thumnailUrl : String!
     var identifier : String!
+    var id : Int = 0
     
     var downloadedImage: UIImage!
 
@@ -26,23 +27,9 @@ class TableViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        
-        
-        
-        //thumbnailImageView.image = nil
-        
-     //   print(thumnailUrl)
-        
-        if thumnailUrl != nil {
-            populateCell(thumnailUrl)
-        }
-        //print(titleLabel.text)
-       
-        //  이 경우 라이브러리에 있는 플레이스홀더 보여줌
-        //	imageView.image = UIImage(named: "placeholder")
     }
 
-    
+    /*
     
     func populateCell(url: String){
         
@@ -84,5 +71,6 @@ class TableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    */
 
 }

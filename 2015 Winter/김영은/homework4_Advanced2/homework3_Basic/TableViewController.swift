@@ -106,10 +106,10 @@ class TableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("myCell")! as! TableViewCell
-        cell.thumnailUrl = myPhoto[indexPath.row].thumbnailUrl
-        cell.identifier = cell.thumnailUrl;
+    //    cell.thumnailUrl = myPhoto[indexPath.row].thumbnailUrl
+     //   cell.identifier = cell.thumnailUrl;
         
-        /*
+        
         let checkedUrlString = myPhoto[indexPath.row].thumbnailUrl.stringByReplacingOccurrencesOfString("http://", withString: "https://")
         //print(checkedUrlString)
         if let checkedUrl = NSURL(string: checkedUrlString ){
@@ -130,8 +130,8 @@ class TableViewController: UITableViewController {
         if cell.id != 0 && cell.id != myPhoto[indexPath.row].id {
             cell.thumbnailImageView.image = nil
         }
-*/
-       // cell.id = myPhoto[indexPath.row].id
+
+        cell.id = myPhoto[indexPath.row].id
         cell.titleLabel.text = myPhoto[indexPath.row].title
         return cell
     }
