@@ -1,9 +1,9 @@
 //
 //  AppDelegate.swift
-//  studyHW1
+//  study2
 //
-//  Created by Pak Suzi on 2015. 6. 6..
-//  Copyright (c) 2015년 suzipak. All rights reserved.
+//  Created by Pak Suzi on 2016. 1. 14..
+//  Copyright © 2016년 suzipak. All rights reserved.
 //
 
 import UIKit
