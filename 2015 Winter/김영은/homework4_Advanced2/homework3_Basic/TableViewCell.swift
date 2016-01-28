@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import SwiftyJSON
-import Alamofire
 import SDWebImage
 
 class TableViewCell: UITableViewCell {
@@ -17,7 +15,6 @@ class TableViewCell: UITableViewCell {
     @IBOutlet weak var thumbnailImageView: UIImageView!
     var thumbnailUrl : String!
     var identifier : String!
-    var id : Int = 0
     
     var myCache = SDImageCache (namespace: "MyUniqueCacheKey")
 
@@ -37,15 +34,9 @@ class TableViewCell: UITableViewCell {
     }
     
     func populateCell(url: String){
-    
-        
-        
-        
-        
         let checkedUrlString = url.stringByReplacingOccurrencesOfString("http://", withString: "https://")
-        
+     
         myCache.queryDiskCacheForKey(url) { (image, SDImageCacheType) -> Void in
-            
             if image != nil {
                 print("already there")
                 self.thumbnailImageView.image = image
@@ -60,27 +51,18 @@ class TableViewCell: UITableViewCell {
                             if url == self.identifier {
                                 self.thumbnailImageView.image =  UIImage(data: data)
                             }
-                            
                         }
                     }
-            
                 }
             }
-        }
-    }
+        }//end myCache.query..
+        
+    }//end populateCell
     
     func getDataFromUrl(url:NSURL, completion: ((data: NSData?, response: NSURLResponse?, error: NSError? ) -> Void)) {
         NSURLSession.sharedSession().dataTaskWithURL(url) { (data, response, error) in
             completion(data: data, response: response, error: error)
             }.resume()
     }
-    
-    
-    override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-    
 
 }

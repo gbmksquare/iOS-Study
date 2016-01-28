@@ -9,7 +9,6 @@
 import UIKit
 import SwiftyJSON
 import Alamofire
-//import SDWebImage
 
 class TableViewController: UITableViewController {
 
@@ -32,10 +31,6 @@ class TableViewController: UITableViewController {
         
         title = "이거슨 제목"  // 네비게이션 에서 타이틀
         
-    //    let myCache = SDImageCache (namespace: "MyUniqueCacheKey")
-    //    myCache.clearMemory()
-    //    myCache.clearDisk()
-        
         setUpTableView()
         loadinitialPhotos()
        
@@ -51,7 +46,6 @@ class TableViewController: UITableViewController {
         Alamofire.request(.GET, postEndpoint)
             .responseJSON { response in
                 guard response.result.error == nil else {
-                    // got an error in getting the data, need to handle it
                     print("error calling GET on /photos/\(cellNum)")
                     print(response.result.error!)
                     self.networkActivityManager.decreaseNetworkCount()
@@ -59,13 +53,7 @@ class TableViewController: UITableViewController {
                 }
                 
                 if let value: AnyObject = response.result.value {
-                    
-                    
-                    
-                    
                     let post = JSON(value)
-                    
-                    //print("The post is: " + post.description)
                     
                     let tmpPhoto = Photo(
                         id : post["id"].int!,
@@ -93,7 +81,6 @@ class TableViewController: UITableViewController {
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
     
@@ -116,11 +103,6 @@ class TableViewController: UITableViewController {
         return cell
     }
     
-    func getDataFromUrl(url:NSURL, completion: ((data: NSData?, response: NSURLResponse?, error: NSError? ) -> Void)) {
-        NSURLSession.sharedSession().dataTaskWithURL(url) { (data, response, error) in
-            completion(data: data, response: response, error: error)
-            }.resume()
-    }
     
     
     
@@ -129,7 +111,6 @@ class TableViewController: UITableViewController {
         let contentOffset = scrollView.contentOffset.y
         let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height;
         if networkActivityManager.networkCount == 0 && (maximumOffset - contentOffset < -60 ){
-            //print("loadMorePhotos() called")
             loadMorePhotos()
         }
     }
@@ -155,23 +136,15 @@ class TableViewController: UITableViewController {
     
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        
-        
-        //
         guard let identifier = segue.identifier else {
             return
         }
         switch identifier {
         case "mySegue" :
-           // print("hi")
             let detailViewController = segue.destinationViewController as! DetailViewController
-            
             detailViewController.urlString = myPhoto[tableView.indexPathForSelectedRow!.row].url
-            
         default: return
         }
-        
-        
     }
 
     
@@ -184,22 +157,16 @@ class NetworkActivityManager {
                 UIApplication.sharedApplication().networkActivityIndicatorVisible = true
             } else {
                 UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-                
             }
         }
         didSet {
-            
         }
     }
     
     func increaseNetworkCount() {
-        
         networkCount++
-     //   print(networkCount)
     }
-    
     func decreaseNetworkCount(){
         networkCount--
-    //    print(networkCount)
     }
 }
