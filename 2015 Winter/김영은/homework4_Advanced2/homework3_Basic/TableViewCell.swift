@@ -9,6 +9,7 @@
 import UIKit
 import SwiftyJSON
 import Alamofire
+import SDWebImage
 
 class TableViewCell: UITableViewCell {
 
@@ -18,44 +19,54 @@ class TableViewCell: UITableViewCell {
     var identifier : String!
     var id : Int = 0
     
+    var myCache = SDImageCache (namespace: "MyUniqueCacheKey")
+
+    
     var downloadedImage: UIImage!
 
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        
     }
     
     
     override func prepareForReuse() {
         super.prepareForReuse()
-    }    /*
+        self.thumbnailImageView.image = nil
+    }
     
     func populateCell(url: String){
     
+        
+        
+        
+        
         let checkedUrlString = url.stringByReplacingOccurrencesOfString("http://", withString: "https://")
+        
+        myCache.queryDiskCacheForKey(url) { (image, SDImageCacheType) -> Void in
             
-        if let checkedUrl = NSURL(string: checkedUrlString ){
-                            getDataFromUrl(checkedUrl) { (data, response, error)  in
-                dispatch_async(dispatch_get_main_queue()) { () -> Void in
-                    guard let data = data where error == nil else { return }
-                    //print("Download Finished")
-                    
-                    if url == self.identifier {
-                        self.thumbnailImageView.image =  UIImage(data: data)
-                        //self.downloadedImage = UIImage(data: data)!
+            if image != nil {
+                print("already there")
+                self.thumbnailImageView.image = image
+            }
+            else{
+                print("downloading")
+                if let checkedUrl = NSURL(string: checkedUrlString ){
+                    self.getDataFromUrl(checkedUrl) { (data, response, error)  in
+                        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+                            guard let data = data where error == nil else { return }
+                            self.myCache.storeImage(UIImage(data: data), forKey: url)
+                            if url == self.identifier {
+                                self.thumbnailImageView.image =  UIImage(data: data)
+                            }
+                            
+                        }
                     }
-
-                    
+            
                 }
             }
         }
-       // thumbnailImageView.image = downloadedImage
-            
-        
-        
-        
-        
-        
     }
     
     func getDataFromUrl(url:NSURL, completion: ((data: NSData?, response: NSURLResponse?, error: NSError? ) -> Void)) {
@@ -70,6 +81,6 @@ class TableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    */
+    
 
 }
